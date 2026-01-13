@@ -1,6 +1,6 @@
 ---------------------------------------------------- Fideres Assignment: relationship between Bitcoin prices and Tether transactions, post submission ---------------------------------------------------------------
 --- PART 1: Data cleaning and making some tables
---- PART 2: Aggregate USDT dat to daily
+--- PART 2: Aggregate USDT data to daily
 --- PART 3: Join to BTC data
 --- PART 4: Create a table for the transaction types
 --- PART 5: Sending and receiving adresses
@@ -9,6 +9,7 @@
 
 
 --- PART 1: Data cleaning and making some tables
+--- Tether data clean
 CREATE TABLE tether_clean AS
 SELECT 
 	TO_CHAR(block_time, 'YYYY-MM-DD') AS date,
@@ -19,8 +20,23 @@ SELECT
 	fee
 FROM tether_q1
 
-SELECT * FROM tether_clean
+SELECT * FROM tether_clean ORDER BY date, amount
 
+
+--- BTC data clean
+CREATE TABLE btc_clean AS
+SELECT 
+	TO_CHAR("Date", 'YYYY-MM-DD') AS date,
+	"Open" AS btc_open,
+	"High" AS btc_high,
+	"Low" AS btc_low,
+	"Close" AS btc_close,
+	"Volume" AS btc_volume,
+	"Market Cap" AS btc_marketcap,
+	"EOD_Return" AS btc_return
+FROM eod_btc_data
+
+SELECT * FROM btc_clean
 
 
 --- Grant Property Tokens with addresses
@@ -34,6 +50,16 @@ FROM tether_clean
 WHERE tx_type = 'Grant Property Tokens'
 
 SELECT * FROM tether_clean_GPT
+
+
+SELECT
+	date,
+	sending_address,
+	reference_address,
+	amount
+FROM tether_clean
+WHERE NOT tx_type = 'Grant Property Tokens'
+ORDER BY date
 
 
 
@@ -51,22 +77,6 @@ WHERE tx_type = 'Revoke Property Tokens'
 
 SELECT * FROM tether_clean_RPT
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-						
 
 
 
@@ -165,24 +175,6 @@ ORDER BY COUNT(reference_address) DESC
 
 
 
-
---- BTC data clean
-CREATE TABLE btc_clean AS
-SELECT 
-	TO_CHAR("Date", 'YYYY-MM-DD') AS date,
-	"Open" AS btc_open,
-	"High" AS btc_high,
-	"Low" AS btc_low,
-	"Close" AS btc_close,
-	"Volume" AS btc_volume,
-	"Market Cap" AS btc_marketcap,
-	"EOD_Return" AS btc_return
-FROM eod_btc_data
-
-SELECT * FROM btc_clean
-
-
-
 --- Join max USDT transactions to BTC
 CREATE TABLE btc_usdt_highesttransactions_everyday AS
 SELECT 
@@ -238,13 +230,6 @@ SELECT * FROM daily_btc_usdt_clean
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
 
 --- PART 2: Aggregate USDT dat to daily
 CREATE TABLE daily_usdt AS
@@ -280,10 +265,6 @@ SELECT date, average_transaction_size,  total_transactions, daily_btc_usdt."Clos
 FROM daily_btc_usdt
 ORDER BY average_transaction_size DESC
 LIMIT 20
-
-
-
-
 
 
 
@@ -535,7 +516,7 @@ ORDER BY amount DESC
 
 
 
------- WHat did 1KYiKJEfdJtap9QX2v9BXJMpz2SfU4pgZw and 1GjgKbj69hDB7YPQF9KwPEy274jLzBKVLh receive?
+------ What did 1KYiKJEfdJtap9QX2v9BXJMpz2SfU4pgZw and 1GjgKbj69hDB7YPQF9KwPEy274jLzBKVLh receive?
 SELECT
 	date,
 	sending_address,
@@ -565,12 +546,57 @@ WHERE
 	reference_address = '1KYiKJEfdJtap9QX2v9BXJMpz2SfU4pgZw'
 
 
+	
+	
+--- Days
+------ 22/02: What transactions happened during this day?
+--------- Create table
+CREATE TABLE twentytwofebrange AS
+SELECT 
+    date,
+    SUM(amount) AS total_transactions
+FROM tether_clean
+WHERE date > '2018-02-16' 
+  AND date < '2018-02-23'
+GROUP BY date
+ORDER BY date;
 
 
+--------- Join with BTC
+SELECT 
+	bc.*,
+	ttfr.total_transactions
+FROM btc_clean AS bc
+LEFT JOIN twentytwofebrange AS ttfr
+	ON bc.date = ttfr.date
 
 
+SELECT
+	date,
+	sending_address,
+	reference_address,
+	amount,
+	tx_type
+FROM tether_clean
+WHERE 
+	sending_address = '1Co1dhYDeF76DQyEyj4B5JdXF9J7TtfWWE' 
+
+SELECT
+	date,
+	sending_address,
+	reference_address,
+	amount,
+	tx_type
+FROM tether_clean
+WHERE 
+	reference_address = '1Co1dhYDeF76DQyEyj4B5JdXF9J7TtfWWE'
 
 
+	
+	
+
+	
+	
 SELECT * FROM daily_usdt --- date, total transactions, total and average fees
 SELECT * FROM daily_usdt_saddresses --- date, total transactions, fees per transaction, grouped by sending address
 SELECT * FROM daily_usdt_raddresses --- date, total transactions, fees per transaction, grouped by reference address
