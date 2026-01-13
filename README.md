@@ -1,6 +1,6 @@
-# Bitcoin_USDT_project
+# Analysis of the relationship between Bitcoin and Tether
 
-Code: 
+The code consists of the following files: 
 
 1) SQL code: data cleaning
 2) Analysis code.R: Statistical models to analyse generic relationship between Bitcoin and Tether
