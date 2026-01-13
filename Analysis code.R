@@ -709,29 +709,3 @@ AIC(DLM_AR1_diff_maxUSDT) # -228.732
 BIC(DLM_AR1_diff_maxUSDT) # -228.3453
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
