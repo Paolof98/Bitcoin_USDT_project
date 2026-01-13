@@ -41,6 +41,13 @@ DailyDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Pos
 
 names(DailyDataClean)
 
+DailyDataClean <- DailyDataClean %>% mutate(BTC_log_returns = log(btc_close) - lag(log(btc_close)))
+DailyDataClean <- DailyDataClean %>% mutate(USDT_diff_log_transactions = log(total_transactions) - lag(log(total_transactions)))
+DailyDataClean <- DailyDataClean %>% mutate(USDT_diff_log_avg_transactions = log(average_transaction_size) - lag(log(average_transaction_size)))
+DailyDataClean <- DailyDataClean %>% mutate(BTC_log_volume = log(btc_volume) - lag(log(btc_volume))) 
+DailyDataClean <- DailyDataClean %>% mutate(BTC_volatility = abs(BTC_log_returns)) 
+
+names(DailyDataClean)
 
 
 
@@ -53,6 +60,12 @@ names(USDTDataClean)
 
 
 cor(DailyData$Close, DailyData$total_transactions, use = "complete.obs") # -0.0021 (weak negative) 
+
+
+
+
+
+
 
 
 
@@ -206,6 +219,7 @@ BIC(DLM_AR3) # 1397.281
 
 
 
+
 DailyData_zoo <- zoo(
   DailyData[, c("Close", "total_transactions")],
   order.by = DailyData$date
@@ -254,13 +268,27 @@ BIC(DLM_AR10) # 1301.325
 
 
 
-
 # Double check model with differenced data
 
 DailyDataClean_zoo <- zoo(
   DailyDataClean[, c("BTC_log_returns", "USDT_diff_log_transactions")],
   order.by = DailyDataClean$date
 )
+
+DailyDataClean_zoo_avgt <- zoo(
+  DailyDataClean[, c("BTC_log_returns", "diff_log_average_USDT")],
+  order.by = DailyDataClean$date
+)
+
+# Average transaction size model
+DLM_AR_avgt_diff <- dynlm(BTC_log_returns ~ L(BTC_log_returns, 1) + L(diff_log_average_USDT, 0:1), data = DailyDataClean_zoo_avgt)
+summary(DLM_AR_avgt_diff) # 
+AIC(DLM_AR_avgt_diff) # 
+BIC(DLM_AR_avgt_diff) # 
+
+
+
+
 
 DLM_AR_diff_simp <- dynlm(BTC_log_returns ~ USDT_diff_log_transactions, data = DailyDataClean_zoo)
 summary(DLM_AR_diff_simp) # R^2 = 0.02
@@ -348,6 +376,28 @@ acf2(ddUSDT, max.lag = 90) # despite what graphed data may look like, differenci
 
 # Conclusion: difference singularly, NOT seasonally
 
+
+
+
+# Average USDT transaction size differencing
+davgUSDT <- diff(DailyDataClean$average_transaction_size)
+ddavgUSDT <- diff(davgUSDT, lag = 7)
+davgUSDT_onlylag <- diff(DailyDataClean$average_transaction_size, lag = 7)
+
+acf2(DailyDataClean$average_transaction_size, max.lag = 90) # high ACF(1,2) and high PACF(1)
+acf2(davgUSDT, max.lag = 90) 					      # high ACF and PACF at lag 1
+acf2(ddavgUSDT, max.lag = 90) 				      # a lot more lags which are higher than 0.2
+acf2(davgUSDT_onlylag) 						      # a lot of lags are high
+
+# Conclusion: ARIMA(0,1,1) on logs or ARMA(0,1) on diff(log(avg))
+
+fit_BTC_avgUSDT_as_xreg <- Arima(
+    DailyDataClean$BTC_log_returns,
+    order = c(0,0,1),
+    xreg  = DailyDataClean$diff_log_average_USDT
+)
+
+summary(fit_BTC_avgUSDT_as_xreg) # high AIC and BIC values
 
 
 
@@ -572,10 +622,18 @@ grangertest(tx_diff ~ btc_diff, order = 5, data = Differenced_data)   # BTC → 
 grangertest(BTC_log_returns ~ USDT_diff_log_transactions, order = 5, data = DailyDataClean)   # USDT → BTC: p = 0.9824
 grangertest(USDT_diff_log_transactions ~ BTC_log_returns, order = 5, data = DailyDataClean)   # BTC → USDT: p = 0.3146
 
-grangertest(BTC_log_returns ~ USDT_diff_log_transactions, order = 1, data = DailyDataClean)   # USDT → BTC: 
+grangertest(BTC_log_returns ~ USDT_diff_log_transactions, order = 1, data = DailyDataClean)   # USDT → BTC: p = 0.9719
 grangertest(USDT_diff_log_transactions ~ BTC_log_returns, order = 1, data = DailyDataClean)   # BTC → USDT: significant at 10% level
 
 
+
+
+## Model with diff(log(avgUSDT))
+grangertest(BTC_log_returns ~ diff_log_average_USDT, order = 5, data = DailyDataClean)   # USDT → BTC: p = 0.6743
+grangertest(diff_log_average_USDT ~ BTC_log_returns, order = 5, data = DailyDataClean)   # BTC → USDT: p = 0.5269
+
+grangertest(BTC_log_returns ~ diff_log_average_USDT, order = 1, data = DailyDataClean)   # USDT → BTC: p = 0.1358
+grangertest(diff_log_average_USDT ~ BTC_log_returns, order = 1, data = DailyDataClean)   # BTC → USDT: significant at the 10% level
 
 
 

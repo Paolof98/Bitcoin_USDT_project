@@ -5,7 +5,7 @@
 USDTDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Tether_Clean.csv")
 
 names(USDTDataClean)
-
+head(USDTDataClean)
 
 ## 2) Bitcoin data clean
 BitcoinDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Bitcoin_Clean.csv")
@@ -17,10 +17,23 @@ head(BitcoinDataClean)
 ## Bitcoin returns: log(BTC_close)-log(BTC_close(t-1))
 BitcoinDataClean <- BitcoinDataClean %>% mutate(log_returns = log(btc_close) - lag(log(btc_close)))
 
+# Volatility = abs(BTC returns)
+BitcoinDataClean <- BitcoinDataClean %>% mutate(BTC_volatility = abs(log_returns))
+
+# diff(log(volume))
+BitcoinDataClean <- BitcoinDataClean %>% mutate(BTC_diff_log_volume = log(btc_volume) - lag(log(btc_volume)))
+
+head(BitcoinDataClean)
+
+
+write_xlsx(BitcoinDataClean, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/BTC_Data_Clean_Vars.xlsx")
+
+
 
 
 
 # TYPE 1: Grant Property Tokens
+
 names(BitcoinDataClean)
 head(BitcoinDataClean)
 summary(BitcoinDataClean$log_returns)
@@ -32,15 +45,19 @@ mean(BitcoinDataClean$log_returns, na.rm = TRUE)
 Tether_GPT <- USDTDataClean %>% filter(tx_type == "Grant Property Tokens")
 
 
+
 ## Vector of the Mining events
-Minting_Events <- tibble(date = as.Date(Tether_GPT$date))
+Minting_Events <- tibble(date = as.Date(Tether_GPT$date, format = "%d/%m/%Y"))
+
+BitcoinDataClean$date <- as.Date(BitcoinDataClean$date, format = "%d/%m/%Y")
 
 
 
 
 
 
-## Join
+# Table with events and BTC returns
+## Join with BTC log returns
 BTC_GPTDays <- Minting_Events %>% 
 		   left_join(BitcoinDataClean, by = "date") %>% 
 		   dplyr::select(date, log_returns) %>% 
@@ -51,7 +68,6 @@ names(BTC_GPTDays)
 head(BTC_GPTDays)
 
 
-# Table with events and returns
 ## Create tables for every day before and after (+-5)
 Five_days_before <- Minting_Events - 5
 Four_days_before <- Minting_Events - 4
@@ -161,8 +177,298 @@ write_xlsx(GPT_Outcomes, "C:/Users/Paolo/Desktop/Fideres assignment/Post submiss
 
 
 
-# Calculations
-## Average Abnormal Return (AAR)
+
+# Table with Volume
+## Join with BTC diff(log(volume))
+BTC_GPTDays_vm <- Minting_Events %>% 
+		   left_join(BitcoinDataClean, by = "date") %>% 
+		   dplyr::select(date, BTC_diff_log_volume) %>% 
+		   rename(GPT_day = date, t = BTC_diff_log_volume)
+
+
+names(BTC_GPTDays_vm)
+head(BTC_GPTDays_vm)
+
+
+## Join
+### 5 days before
+BTC_GPT_5DaysBefore_vm <- Five_days_before %>% 
+		   	     left_join(BitcoinDataClean, by = "date") %>% 
+		   	     dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	     rename("t-5" = BTC_diff_log_volume)
+
+
+### 4 days before
+BTC_GPT_4DaysBefore_vm <- Four_days_before %>% 
+		   	     left_join(BitcoinDataClean, by = "date") %>% 
+		   	     dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	     rename("t-4" = BTC_diff_log_volume)
+
+
+### 3 days before
+BTC_GPT_3DaysBefore_vm <- Three_days_before %>% 
+		   	     left_join(BitcoinDataClean, by = "date") %>% 
+		   	     dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	     rename("t-3" = BTC_diff_log_volume)
+
+
+### 2 days before
+BTC_GPT_2DaysBefore_vm <- Two_days_before %>% 
+		   	     left_join(BitcoinDataClean, by = "date") %>% 
+		   	     dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	     rename("t-2" = BTC_diff_log_volume)
+
+
+### 1 day before
+BTC_GPT_1DayBefore_vm <- One_day_before %>% 
+		   	    left_join(BitcoinDataClean, by = "date") %>% 
+		   	    dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	    rename("t-1" = BTC_diff_log_volume)
+
+
+### 1 day after
+BTC_GPT_1DayAfter_vm <- One_day_after %>% 
+		   	   left_join(BitcoinDataClean, by = "date") %>% 
+		   	   dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	   rename("t+1" = BTC_diff_log_volume)
+
+
+### 2 days after
+BTC_GPT_2DaysAfter_vm <- Two_days_after %>% 
+		   	    left_join(BitcoinDataClean, by = "date") %>% 
+		   	    dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	    rename("t+2" = BTC_diff_log_volume)
+
+
+### 3 days after
+BTC_GPT_3DaysAfter_vm <- Three_days_after %>% 
+		   	    left_join(BitcoinDataClean, by = "date") %>% 
+		   	    dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	    rename("t+3" = BTC_diff_log_volume)
+
+### 4 days after
+BTC_GPT_4DaysAfter_vm <- Four_days_after %>% 
+		   	    left_join(BitcoinDataClean, by = "date") %>% 
+		   	    dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	    rename("t+4" = BTC_diff_log_volume)
+
+
+### 5 days after
+BTC_GPT_5DaysAfter_vm <- Five_days_after %>% 
+		   	    left_join(BitcoinDataClean, by = "date") %>% 
+		   	    dplyr::select(date, BTC_diff_log_volume) %>% 
+		   	    rename("t+5" = BTC_diff_log_volume)
+
+
+
+## Bind all of them
+### Bind
+GPT_Outcomes_vm <- cbind(BTC_GPT_5DaysBefore_vm,
+			    BTC_GPT_4DaysBefore_vm,
+			    BTC_GPT_3DaysBefore_vm,
+			    BTC_GPT_2DaysBefore_vm,
+			    BTC_GPT_1DayBefore_vm,
+			    BTC_GPTDays_vm,
+			    BTC_GPT_1DayAfter_vm,
+			    BTC_GPT_2DaysAfter_vm,
+			    BTC_GPT_3DaysAfter_vm,
+			    BTC_GPT_4DaysAfter_vm,
+			    BTC_GPT_5DaysAfter_vm)
+
+
+### Remove the dates and order
+GPT_Outcomes_vm <- GPT_Outcomes_vm %>% 
+		    dplyr::select(GPT_day, "t-5", "t-4", "t-3", "t-2", "t-1", t, "t+1", "t+2", "t+3", "t+4", "t+5")
+
+
+head(GPT_Outcomes_vm)
+
+
+write_xlsx(GPT_Outcomes_vm, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/GPT_Outcomes_volume.xlsx")
+
+mean(BitcoinDataClean$BTC_diff_log_volume, na.rm = TRUE) # -0.009162287
+
+
+
+
+
+
+
+
+
+# IRF of minting event shock on BTC returns
+# If GPT, 1, hence 0
+names(USDTDataClean)
+
+USDTDataClean <- USDTDataClean %>% mutate(is_GPT = ifelse(tx_type == "Grant Property Tokens", 1, 0))
+
+
+# Group USDT data
+USDTDataClean_Daily <- USDTDataClean %>% 
+	dplyr::select(date, amount, fee, is_GPT) %>%
+	dplyr::group_by(date) %>% 
+	dplyr::summarise(total_daily_transactions = sum(amount), 
+			     daily_fees = sum(fee),
+			     is_GPT = sum(is_GPT))
+
+
+# Join with BTC
+BitcoinDataClean$date <- as.Date(USDTDataClean_Daily$date)
+
+DailyData_Issuancebinary <- USDTDataClean_Daily %>% 
+					left_join(BitcoinDataClean, by = "date")
+
+head(DailyData_Issuancebinary)
+
+
+
+## Data needed
+BTC <- DailyData_Issuancebinary$log_returns
+USDT_issuance <- DailyData_Issuancebinary$is_GPT
+
+
+VAR_Issuance_Data <- as.data.frame(na.omit(cbind(BTC, USDT_issuance)))
+
+
+# VAR
+VARselect(VAR_Issuance_Data, lag.max = 5, type = "const")
+
+
+fit_VAR_Issuance <- VAR(VAR_Issuance_Data, p = 1, type = "const")
+
+summary(fit_VAR_Issuance)
+
+fit_VAR_Issuance_2 <- VAR(VAR_Issuance_Data, p = 2, type = "const")
+
+summary(fit_VAR_Issuance_2) # VAR(2) is weak model, p = 0.7373, its the other way around that has strong estimations
+
+
+# IRF
+## IRF with VAR(1)
+IRF_Issuance <- irf(
+  fit_VAR_Issuance,
+  impulse  = "USDT_issuance",
+  response = "BTC",
+  n.ahead  = 10,
+  boot     = TRUE
+)
+
+plot(IRF_Issuance)
+
+
+## IRF with VAR(2)
+IRF_Issuance_2 <- irf(
+  fit_VAR_Issuance_2,
+  impulse  = "USDT_issuance",
+  response = "BTC",
+  n.ahead  = 10,
+  boot     = TRUE
+)
+
+plot(IRF_Issuance_2) # DON'T USE
+
+
+
+
+
+
+
+
+# Calculate values in days when there is no GPT transactions
+
+DailyData_Issuancebinary_noGPT <- DailyData_Issuancebinary %>% dplyr::filter(is_GPT == 0)
+
+mean(DailyData_Issuancebinary_noGPT$BTC_diff_log_volume, na.rm = TRUE) # -0.01609015
+
+mean(DailyData_Issuancebinary_noGPT$BTC_volatility, na.rm = TRUE) # 0.04836897
+
+
+var(DailyData_Issuancebinary_noGPT$BTC_diff_log_volume, na.rm = TRUE) # 0.03895581
+var(DailyData_Issuancebinary_noGPT$btc_volume, na.rm = TRUE) # 1.508119e+19
+var(DailyData_Issuancebinary_noGPT$BTC_diff_log_volume, na.rm = TRUE)
+
+
+
+
+
+
+# Remove Event window rows
+
+## The dates are:
+Minting_Events
+Five_days_before <- Minting_Events - 5
+Four_days_before <- Minting_Events - 4
+Three_days_before <- Minting_Events - 3
+Two_days_before <- Minting_Events - 2
+One_day_before <- Minting_Events - 1
+One_day_after <- Minting_Events + 1
+Two_days_after <- Minting_Events + 2
+Three_days_after <- Minting_Events + 3
+Four_days_after <- Minting_Events + 4
+Five_days_after <- Minting_Events + 5
+
+## Bind
+Event_Window <- rbind(Five_days_before,
+			    Four_days_before,
+			    Three_days_before,
+			    Two_days_before,
+			    One_day_before,
+			    Minting_Events,
+			    One_day_after,
+			    Two_days_after,
+			    Three_days_after,
+			    Four_days_after,
+			    Five_days_after)
+
+## Unique values
+Event_Window <- unique(Event_Window)
+
+Event_Window <- dplyr::arrange(Event_Window) # doesn't order but checks out anyway
+
+nrow(Event_Window) # 43 dates
+
+## Now need to remove these dates from the data
+DailyData_NoEventWindow <- DailyData_Issuancebinary %>% anti_join(Event_Window, by = "date")
+
+head(DailyData_NoEventWindow)
+head(DailyData_Issuancebinary)
+
+nrow(DailyData_NoEventWindow)
+nrow(DailyData_Issuancebinary)
+
+write_xlsx(DailyData_NoEventWindow, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/DailyData_NoEventWindow.xlsx")
+
+## Join to have Event Window data
+DailyData_EventWindow <- Event_Window %>% left_join(DailyData_Issuancebinary, by = "date")
+
+head(DailyData_EventWindow)
+head(DailyData_Issuancebinary)
+
+nrow(DailyData_EventWindow)
+nrow(DailyData_Issuancebinary)
+
+
+nrow(DailyData_NoEventWindow) + nrow(DailyData_EventWindow)
+
+
+
+# Measures of central tendency and dispersion of no event window data
+names(DailyData_NoEventWindow)
+
+
+mean(DailyData_NoEventWindow$log_returns, na.rm = TRUE) # -0.009074
+mean(DailyData_NoEventWindow$BTC_diff_log_volume, na.rm = TRUE) #  -0.005320802
+mean(DailyData_NoEventWindow$BTC_volatility, na.rm = TRUE) # 0.05264858
+
+sd(DailyData_NoEventWindow$log_returns, na.rm = TRUE) # 0.06354307
+sd(DailyData_NoEventWindow$BTC_diff_log_volume, na.rm = TRUE) # 0.2147943
+sd(DailyData_NoEventWindow$BTC_volatility, na.rm = TRUE) # 0.03594654
+
+
+
+
+
+
 
 
 
@@ -506,11 +812,43 @@ write_xlsx(RPT_Outcomes, "C:/Users/Paolo/Desktop/Fideres assignment/Post submiss
 
 
 
+# Remove RPT and calculate mean returns
+
+EventWindow_Revoke <- rbind(Five_days_before_R,
+				    Four_days_before_R,
+				    Three_days_before_R,
+				    Two_days_before_R,
+				    One_day_before_R,
+				    Revoke_Event,
+				    One_day_after_R,
+				    Two_days_after_R,
+				    Three_days_after_R,
+				    Four_days_after_R,
+				    Five_days_after_R)
 
 
 
+## Unique values
+EventWindow_Revoke <- unique(EventWindow_Revoke)
 
 
+## Now need to remove these dates from the data
+DailyData_NoEventWindow_R <- DailyData_Issuancebinary %>% anti_join(EventWindow_Revoke, by = "date")
+
+print(DailyData_NoEventWindow_R, n = 40)
+
+
+
+# Measures of central tendency and dispersion of no event window data
+names(DailyData_NoEventWindow_R)
+
+mean(DailyData_NoEventWindow_R$log_returns, na.rm = TRUE) # -0.002441559
+mean(DailyData_NoEventWindow_R$BTC_diff_log_volume, na.rm = TRUE) # -0.01103645
+mean(DailyData_NoEventWindow_R$BTC_volatility, na.rm = TRUE) # 0.04596828
+
+sd(DailyData_NoEventWindow_R$log_returns, na.rm = TRUE) # 0.05841097
+sd(DailyData_NoEventWindow_R$BTC_diff_log_volume, na.rm = TRUE) # 0.1964065
+sd(DailyData_NoEventWindow_R$BTC_volatility, na.rm = TRUE) # 0.03574009
 
 
 
@@ -530,14 +868,6 @@ write_xlsx(RPT_Outcomes, "C:/Users/Paolo/Desktop/Fideres assignment/Post submiss
 
 # Volatility of variables
 
-## Bitcoin: 
-DailyDataClean <- DailyDataClean %>% mutate(BTC_log_returns = log(btc_close) - lag(log(btc_close))) # differenced
-DailyDataClean <- DailyDataClean %>% mutate(BTC_log_volume = log(btc_volume) - lag(log(btc_volume))) # differenced
-
-
-## Tether total daily transactions
-DailyDataClean <- DailyDataClean %>% mutate(USDT_log_transactions = log(total_transactions) - lag(log(total_transactions))) # differenced
-DailyDataClean <- DailyDataClean %>% rename(USDT_diff_log_transactions = USDT_log_transactions)
 
 StdDev_BTC_Close <- sd(DailyDataClean$BTC_log_returns, na.rm = TRUE)
 StdDev_BTC_Volume <- sd(DailyDataClean$BTC_log_volume, na.rm = TRUE)
