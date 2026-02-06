@@ -470,10 +470,6 @@ sd(DailyData_NoEventWindow$BTC_volatility, na.rm = TRUE) # 0.03594654
 
 
 
-
-
-
-
 # TYPE 2: Simple Send
 # large simple sends (e.g., exchange inflows) might impact BTC markets.
 # Idea: Discretise Simple send transactions into caegories (Small, big transactions) and see what happens
@@ -680,9 +676,6 @@ grangertest(log(Total_Amount_LargeTransactions) ~ log_returns, order = 5, data =
 
 
 
-
-
-
 # TYPE 3: Revoke Property Tokens
 ## There is only one RPT event, so could use this as an eventt and see what happened to BTC returns before and after
 
@@ -850,31 +843,5 @@ sd(DailyData_NoEventWindow_R$log_returns, na.rm = TRUE) # 0.05841097
 sd(DailyData_NoEventWindow_R$BTC_diff_log_volume, na.rm = TRUE) # 0.1964065
 sd(DailyData_NoEventWindow_R$BTC_volatility, na.rm = TRUE) # 0.03574009
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Volatility of variables
-
-
-StdDev_BTC_Close <- sd(DailyDataClean$BTC_log_returns, na.rm = TRUE)
-StdDev_BTC_Volume <- sd(DailyDataClean$BTC_log_volume, na.rm = TRUE)
-StdDev_USDT_Transactions <- sd(DailyDataClean$USDT_log_transactions, na.rm = TRUE)
-
-StdDev_BTC_Close 
-StdDev_BTC_Volume
-StdDev_USDT_Transactions
 
 
