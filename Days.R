@@ -102,7 +102,3 @@ mean(Data_No18Jan_EventWindow$btc_return, na.rm = TRUE) # -0.00406962 matches Ex
 
 ifelse(mean(Data_No18Jan_EventWindow$BTC_log_returns, na.rm = TRUE) == mean(Data_No22Feb_EventWindow$BTC_log_returns, na.rm = TRUE), "TRUE", "FALSE") # TRUE
 
-
-
-
-
