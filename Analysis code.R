@@ -64,11 +64,6 @@ cor(DailyData$Close, DailyData$total_transactions, use = "complete.obs") # -0.00
 
 
 
-
-
-
-
-
 ##### MODELS: For each model, need to take into account time dependence #####
 
 # Genrate new variables 
@@ -169,8 +164,6 @@ summary(Probit_AvgTr) # AIC = 128.71
 
 
 # MODEL FAMILY 2: Distributed lag models (regression model includes not only current but also lagged values of explanatory variables)
-
-
 
 ## Model with one lagged value
 DLM <- lm(Close ~ total_transactions + lag1_trans, data = DailyData)
@@ -450,26 +443,6 @@ checkresiduals(fit_USDT_013$fit)
 
 
 
-
-
-# Use USDT model for Bitcoin?
-
-## MA residuals from the Tether ARIMA model
-USDT_MAresiduals <- fit_USDT_013$fit$residuals
-
-
-btc_lag1  <- stats::lag(DailyDataClean$btc_close, 1)
-tx_diff   <- diff(DailyDataClean$total_transactions)
-ma_lag1   <- stats::lag(USDT_MAresiduals, 1)
-ma_lag2   <- stats::lag(USDT_MAresiduals, 2)
-ma_lag3   <- stats::lag(USDT_MAresiduals, 3)
-
-btc_lag1  <- as.numeric(btc_lag1)
-ma_lag1   <- as.numeric(ma_lag1)
-ma_lag2   <- as.numeric(ma_lag2)
-ma_lag3   <- as.numeric(ma_lag3)
-
-
 ## Difference BTC data
 ### Difference data singularly
 dBTC <- diff(Datats$btc_close)
@@ -486,11 +459,6 @@ acf2(ddBTC, max.lag = 90) # overdifferencing
 # Hence, ARIMA model for BTC could be ARIMA(1,1,0)
 fit_BTC_simple <- sarima(Datats$btc_close, 1,1,0) # AIC = 15.906  AICc = 15.90756  BIC = 15.98988
 summary(fit_BTC_simple)
-
-
-
-
-
 
 
 
@@ -591,20 +559,6 @@ BIC(fit_BTC_arima_simple) # -232.2814: BIC better
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # MODEL FAMILY 3: Granger causality test
 
 btc_diff <- diff(DailyDataClean$btc_close)
@@ -673,10 +627,6 @@ plot(irf(fit_VAR_logs, impulse = "BTC_log_returns", response = "USDT_diff_log_tr
 
 
 
-
-
-
-
 # Data just with max transactions
 DailyDataClean_MaxUSDTDaily <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/BTC_USDT_max_transactions_everyday.csv")
 
@@ -707,5 +657,6 @@ DLM_AR1_diff_maxUSDT <- dynlm(BTC_log_returns ~ L(BTC_log_returns, 1) + L(USDT_l
 summary(DLM_AR1_diff_maxUSDT) # R^2 = 0.06594, non significant values 
 AIC(DLM_AR1_diff_maxUSDT) # -228.732
 BIC(DLM_AR1_diff_maxUSDT) # -228.3453
+
 
 
