@@ -511,14 +511,6 @@ plot(IRF_E1KY)
 
 
 
-
-
-
-
-
-
-
-
 # Top 5% of transactions: are they all from 1KY?
 ## Define extreme USDT transactions
 ### 95% to get highest
@@ -541,12 +533,6 @@ USDT_Top5pc <- USDTDataClean %>% filter(extreme  == "High transaction")
 
 write_xlsx(USDT_Top5pc, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/USDTClean with high transactions identification.xlsx") 
 # Top 5% are not all from 1KY or 1NT. On 22/02 there is another interesting high Simple Send transaction. Lets look at particular days
-
-
-
-
-
-
 
 
 
