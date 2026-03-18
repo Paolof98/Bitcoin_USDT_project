@@ -2,6 +2,8 @@
 
 The [report I wrote on the relationship between Bitcoin and Tether can be accessed by this link](https://github.com/Paolof98/Bitcoin_USDT_project/blob/main/REPORT%3A%20Analysis%20of%20the%20Relationship%20between%20Bitcoin%20and%20Tether.pdf), and it can be downloaded by clicking on the download button on the top right.
 
+![](Download%20button.png)
+
 The code in this repo consists of the following files: 
 
 1) [SQL code](https://github.com/Paolof98/Bitcoin_USDT_project/blob/main/SQLcode.sql): Data cleaning and creating tables
