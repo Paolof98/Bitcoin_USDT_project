@@ -1,4 +1,4 @@
-#### PART 2: TRANSACTION TYPES ####
+# PART 2: TRANSACTION TYPES
 
 # Relevant data
 ## 1) Tether (USDT) data cleaned
