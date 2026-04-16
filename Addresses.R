@@ -4,7 +4,7 @@
 # Look into 1KY...
 
 # Bitcoin data with net 1KY... transactions daily
-BTC_Net1KY_Data <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Bitcoin_and_netKY_transactions.csv")
+BTC_Net1KY_Data <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Bitcoin_and_netKY_transactions.csv")
 
 # BTC returns
 BTC_Net1KY_Data <- BTC_Net1KY_Data %>% mutate(BTC_log_returns = log(btc_close) - lag(log(btc_close)))
@@ -65,7 +65,7 @@ ExtremeDays_filtered <- BTC_Net1KY_Data %>% dplyr::filter(extreme != "Normal")
 
 head(ExtremeDays_filtered)
 
-write_xlsx(ExtremeDays_filtered, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/ExtremeDays1KY_filtered.xlsx")
+write_xlsx(ExtremeDays_filtered, "C:/Users/Paolo/Desktop/ assignment/Post submission work/ExtremeDays1KY_filtered.xlsx")
 
 
 ### Filter for normal days
@@ -202,7 +202,7 @@ Extreme1KY_Outcomes <- Extreme1KY_Outcomes %>%
 
 
 
-write_xlsx(Extreme1KY_Outcomes, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Extreme1KY_Outcomes.xlsx") 
+write_xlsx(Extreme1KY_Outcomes, "C:/Users/Paolo/Desktop/ assignment/Post submission work/Extreme1KY_Outcomes.xlsx") 
 
 
 BTC_Net1KY_Data_zoo <- zoo(
@@ -395,7 +395,7 @@ Extreme1KY_Outcomes_V <- Extreme1KY_Outcomes_V %>%
 
 
 
-write_xlsx(Extreme1KY_Outcomes_V, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Extreme1KY_Outcomes_Volume.xlsx") 
+write_xlsx(Extreme1KY_Outcomes_V, "C:/Users/Paolo/Desktop/ assignment/Post submission work/Extreme1KY_Outcomes_Volume.xlsx") 
 
 
 
@@ -446,7 +446,7 @@ head(DailyData_Issuancebinary)
 nrow(DailyData_NoEventWindow_1KYED)
 nrow(DailyData_Issuancebinary)
 
-write_xlsx(DailyData_NoEventWindow_1KYED, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/DailyData_NoEventWindow.xlsx")
+write_xlsx(DailyData_NoEventWindow_1KYED, "C:/Users/Paolo/Desktop/ assignment/Post submission work/DailyData_NoEventWindow.xlsx")
 
 ## Join to have Event Window data
 DailyData_EventWindow_1KYED <- Event_Window_1KYED %>% left_join(DailyData_Issuancebinary, by = "date")
@@ -531,7 +531,7 @@ head(USDTDataClean)
 # Top 5% table
 USDT_Top5pc <- USDTDataClean %>% filter(extreme  == "High transaction")
 
-write_xlsx(USDT_Top5pc, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/USDTClean with high transactions identification.xlsx") 
+write_xlsx(USDT_Top5pc, "C:/Users/Paolo/Desktop/ assignment/Post submission work/USDTClean with high transactions identification.xlsx") 
 # Top 5% are not all from 1KY or 1NT. On 22/02 there is another interesting high Simple Send transaction. Lets look at particular days
 
 
