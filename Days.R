@@ -1,4 +1,4 @@
-#### PART 4: INTERESTING DAYS ####
+# PART 4: INTERESTING DAYS 
 
 # The interesting days I found are:
 ## 30 January
