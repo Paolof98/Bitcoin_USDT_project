@@ -1,4 +1,4 @@
-# POST SUBMISSION WORK
+# POST SUBMISSION PROJECT
 
 # Load relevant libraries
 library(tidyverse)
@@ -31,13 +31,13 @@ library(vars)
 # Load in data
 
 ## 1) Daily BTC and Tether transactions data
-DailyData <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/daily_btc_usdt.csv")
+DailyData <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/daily_btc_usdt.csv")
 
 names(DailyData)
 
 
 ## 2) Daily BTC and Tether transactions data CLEAN
-DailyDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Daily_data_clean.csv")
+DailyDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Daily_data_clean.csv")
 
 names(DailyDataClean)
 
@@ -52,7 +52,7 @@ names(DailyDataClean)
 
 
 ## 3) Tether (USDT) data cleaned
-USDTDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Tether_Clean.csv")
+USDTDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Tether_Clean.csv")
 
 names(USDTDataClean)
 
@@ -628,7 +628,7 @@ plot(irf(fit_VAR_logs, impulse = "BTC_log_returns", response = "USDT_diff_log_tr
 
 
 # Data just with max transactions
-DailyDataClean_MaxUSDTDaily <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/BTC_USDT_max_transactions_everyday.csv")
+DailyDataClean_MaxUSDTDaily <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/BTC_USDT_max_transactions_everyday.csv")
 
 names(DailyDataClean_MaxUSDTDaily)
 
