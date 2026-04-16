@@ -1,5 +1,5 @@
 # POST SUBMISSION PROJECT
-# PART 1: Statistical relationship between BTC and USDT
+# PART 1: STATISTICAL RELATIONSHIP BETWEEN BTC AND USDT
 
 # Load relevant libraries
 library(tidyverse)
