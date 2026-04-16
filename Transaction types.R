@@ -2,13 +2,13 @@
 
 # Relevant data
 ## 1) Tether (USDT) data cleaned
-USDTDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Tether_Clean.csv")
+USDTDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Tether_Clean.csv")
 
 names(USDTDataClean)
 head(USDTDataClean)
 
 ## 2) Bitcoin data clean
-BitcoinDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Bitcoin_Clean.csv")
+BitcoinDataClean <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Bitcoin_Clean.csv")
 
 names(BitcoinDataClean)
 head(BitcoinDataClean)
@@ -26,7 +26,7 @@ BitcoinDataClean <- BitcoinDataClean %>% mutate(BTC_diff_log_volume = log(btc_vo
 head(BitcoinDataClean)
 
 
-write_xlsx(BitcoinDataClean, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/BTC_Data_Clean_Vars.xlsx")
+write_xlsx(BitcoinDataClean, "C:/Users/Paolo/Desktop/ assignment/Post submission work/BTC_Data_Clean_Vars.xlsx")
 
 
 
@@ -173,7 +173,7 @@ GPT_Outcomes <- GPT_Outcomes %>%
 
 
 
-write_xlsx(GPT_Outcomes, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/GPT_Outcomes.xlsx")
+write_xlsx(GPT_Outcomes, "C:/Users/Paolo/Desktop/ assignment/Post submission work/GPT_Outcomes.xlsx")
 
 
 
@@ -284,7 +284,7 @@ GPT_Outcomes_vm <- GPT_Outcomes_vm %>%
 head(GPT_Outcomes_vm)
 
 
-write_xlsx(GPT_Outcomes_vm, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/GPT_Outcomes_volume.xlsx")
+write_xlsx(GPT_Outcomes_vm, "C:/Users/Paolo/Desktop/ assignment/Post submission work/GPT_Outcomes_volume.xlsx")
 
 mean(BitcoinDataClean$BTC_diff_log_volume, na.rm = TRUE) # -0.009162287
 
@@ -436,7 +436,7 @@ head(DailyData_Issuancebinary)
 nrow(DailyData_NoEventWindow)
 nrow(DailyData_Issuancebinary)
 
-write_xlsx(DailyData_NoEventWindow, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/DailyData_NoEventWindow.xlsx")
+write_xlsx(DailyData_NoEventWindow, "C:/Users/Paolo/Desktop/ assignment/Post submission work/DailyData_NoEventWindow.xlsx")
 
 ## Join to have Event Window data
 DailyData_EventWindow <- Event_Window %>% left_join(DailyData_Issuancebinary, by = "date")
@@ -602,7 +602,7 @@ USDTSimpleSend_HighTransactions_DailySum <- USDTSimpleSend_HighTransactions_Dail
 BTC_USDTSimpleSend_HighTransactions <- USDTSimpleSend_HighTransactions_DailySum %>% 
 		   	    			   left_join(BitcoinDataClean, by = "date")
 
-write_xlsx(BTC_USDTSimpleSend_HighTransactions, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/BTC_USDTSimpleSend_HighTransactions.xlsx")
+write_xlsx(BTC_USDTSimpleSend_HighTransactions, "C:/Users/Paolo/Desktop/ assignment/Post submission work/BTC_USDTSimpleSend_HighTransactions.xlsx")
 
 
 
@@ -800,7 +800,7 @@ RPT_Outcomes <- RPT_Outcomes %>%
 
 
 
-write_xlsx(RPT_Outcomes, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/RPT_Outcomes.xlsx")
+write_xlsx(RPT_Outcomes, "C:/Users/Paolo/Desktop/ assignment/Post submission work/RPT_Outcomes.xlsx")
 
 
 
