@@ -1,4 +1,4 @@
----------------------------------------------------- Fideres Assignment: relationship between Bitcoin prices and Tether transactions, post submission ---------------------------------------------------------------
+---------------------------- Assignment: relationship between Bitcoin prices and Tether transactions, post submission ----------------------------------------------
 --- PART 1: Data cleaning and making some tables
 --- PART 2: Aggregate USDT data to daily
 --- PART 3: Join to BTC data
