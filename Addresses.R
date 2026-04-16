@@ -1,4 +1,4 @@
-#### PART 3: ADRESSES ####
+# PART 3: ADRESSES
 
 # 3Mb... has already been analysed in the Grant Property Tokens section
 # Look into 1KY...
