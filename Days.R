@@ -14,7 +14,7 @@
 
 # 22 February 2018
 ## USDT data from the 17th to the 27th of February
-Data_17to27Feb <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/BTC and USDT 17 to 27 Feb.csv")
+Data_17to27Feb <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/BTC and USDT 17 to 27 Feb.csv")
 
 names(Data_17to27Feb)
 
@@ -29,12 +29,12 @@ Data_17to27Feb <- Data_17to27Feb %>% mutate(BTC_diff_log_volume = log(btc_volume
 
 head(Data_17to27Feb)
 
-write_xlsx(Data_17to27Feb, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Data 17 to 27 Feb.xlsx")
+write_xlsx(Data_17to27Feb, "C:/Users/Paolo/Desktop/ assignment/Post submission work/Data 17 to 27 Feb.xlsx")
 
 # sum of day before and after is that there are negative returns, then they increase later.  After 3 to 4 days higher returns and volume, volatility noisier. Volatile volume
 
 
-Data_No22Feb_EventWindow <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Data no 22 Feb event window.csv")
+Data_No22Feb_EventWindow <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Data no 22 Feb event window.csv")
 
 names(Data_No22Feb_EventWindow)
 
@@ -59,7 +59,7 @@ mean(Data_No22Feb_EventWindow$BTC_volatility, na.rm = TRUE) # 0.04767388
 
 
 # 18 March 2018
-Data_No18Mar_EventWindow <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Data no 18 Mar event window.csv")
+Data_No18Mar_EventWindow <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Data no 18 Mar event window.csv")
 
 names(Data_No18Mar_EventWindow)
 
@@ -81,7 +81,7 @@ mean(Data_No18Mar_EventWindow$BTC_volatility, na.rm = TRUE) # 0.05105032
 
 
 # 18 January 2018
-Data_No18Jan_EventWindow <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Data no 18 Jan event window.csv")
+Data_No18Jan_EventWindow <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Data no 18 Jan event window.csv")
 
 names(Data_No18Jan_EventWindow)
 
