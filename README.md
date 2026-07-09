@@ -1,6 +1,6 @@
 # Analysis of the relationship between Bitcoin and Tether
 
-The [report I wrote on the relationship between Bitcoin and Tether can be accessed by this link](REPORT%3A%20Analysis%20of%20the%20Relationship%20between%20Bitcoin%20and%20Tether.pdf), and it can be downloaded by clicking on the download button on the top right.
+The [report I wrote on the relationship between Bitcoin and Tether can be accessed by this link](REPORT%20-%20Analysis%20of%20the%20Relationship%20between%20Bitcoin%20and%20Tether.pdf), and it can be downloaded by clicking on the download button on the top right.
 
 ![](Download%20button.png)
 
