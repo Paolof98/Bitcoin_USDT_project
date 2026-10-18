@@ -1,10 +1,10 @@
-# PART 3: ADRESSES
+#### PART 3: ADRESSES ####
 
 # 3Mb... has already been analysed in the Grant Property Tokens section
 # Look into 1KY...
 
 # Bitcoin data with net 1KY... transactions daily
-BTC_Net1KY_Data <- readr::read_csv("C:/Users/Paolo/Desktop/ assignment/Post submission work/Bitcoin_and_netKY_transactions.csv")
+BTC_Net1KY_Data <- readr::read_csv("C:/Users/Paolo/Desktop/Fideres assignment post Nov 2025 submission work/Bitcoin_and_netKY_transactions.csv")
 
 # BTC returns
 BTC_Net1KY_Data <- BTC_Net1KY_Data %>% mutate(BTC_log_returns = log(btc_close) - lag(log(btc_close)))
@@ -48,10 +48,11 @@ BTC_Net1KY_Data <- BTC_Net1KY_Data %>%
   )
 
 
-
-
-
 head(BTC_Net1KY_Data)
+
+
+
+
 BTC_Net1KY_Data$date <- as.Date(BTC_Net1KY_Data$date, format = "%d/%m/%Y")
 
 
@@ -65,7 +66,7 @@ ExtremeDays_filtered <- BTC_Net1KY_Data %>% dplyr::filter(extreme != "Normal")
 
 head(ExtremeDays_filtered)
 
-write_xlsx(ExtremeDays_filtered, "C:/Users/Paolo/Desktop/ assignment/Post submission work/ExtremeDays1KY_filtered.xlsx")
+write_xlsx(ExtremeDays_filtered, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/ExtremeDays1KY_filtered.xlsx")
 
 
 ### Filter for normal days
@@ -87,6 +88,100 @@ head(ExtremeDays_filtered)
 Extreme_1KY_dates <- tibble(date = as.Date(ExtremeDays_filtered$date, format = "%d/%m/%Y"))
 
 head(Extreme_1KY_dates)
+
+
+
+event_dates <- BTC_Net1KY_Data %>%
+  filter(extreme != "Normal") %>%
+  pull(date)
+
+event_dates
+length(event_dates)
+
+
+
+
+# HAC ERRORS
+
+BTC_Net1KY_Data <- BTC_Net1KY_Data %>%
+  mutate(
+    D_m5 = as.integer(date %in% (event_dates - 5)),
+    D_m4 = as.integer(date %in% (event_dates - 4)),
+    D_m3 = as.integer(date %in% (event_dates - 3)),
+    D_m2 = as.integer(date %in% (event_dates - 2)),
+    D_m1 = as.integer(date %in% (event_dates - 1)),
+    D_0  = as.integer(date %in% event_dates),
+    D_p1 = as.integer(date %in% (event_dates + 1)),
+    D_p2 = as.integer(date %in% (event_dates + 2)),
+    D_p3 = as.integer(date %in% (event_dates + 3)),
+    D_p4 = as.integer(date %in% (event_dates + 4)),
+    D_p5 = as.integer(date %in% (event_dates + 5))
+  )
+
+
+BTC_Net1KY_Data %>%
+  dplyr::select(date, extreme, D_m5:D_p5) %>%
+  dplyr::filter(rowSums(across(D_m5:D_p5)) > 0)
+
+
+
+
+fit_1KY_event <- lm(
+  BTC_log_returns ~
+    D_m5 + D_m4 + D_m3 + D_m2 + D_m1 +
+    D_0 +
+    D_p1 + D_p2 + D_p3 + D_p4 + D_p5,
+  data = BTC_Net1KY_Data
+)
+
+summary(fit_1KY_event)
+
+
+
+V_HAC <- NeweyWest(
+  fit_1KY_event,
+  lag = 5,
+  prewhite = FALSE,
+  adjust = TRUE
+)
+
+coeftest(fit_1KY_event, vcov. = V_HAC)
+
+
+
+
+## CAAR
+library(car)
+
+car::linearHypothesis(
+  fit_1KY_event,
+  "D_p1 + D_p2 + D_p3 + D_p4 + D_p5 = 0",
+  vcov. = V_HAC,
+  test = "F"
+)
+
+
+
+# Are all five post-event coefficients jointly zero?
+car::linearHypothesis(
+  fit_1KY_event,
+  c(
+    "D_p1 = 0",
+    "D_p2 = 0",
+    "D_p3 = 0",
+    "D_p4 = 0",
+    "D_p5 = 0"
+  ),
+  vcov. = V_HAC,
+  test = "F"
+)
+
+
+
+
+
+
+
 
 ## +-5 days
 Five_days_before_1KY <- Extreme_1KY_dates - 5
@@ -202,7 +297,7 @@ Extreme1KY_Outcomes <- Extreme1KY_Outcomes %>%
 
 
 
-write_xlsx(Extreme1KY_Outcomes, "C:/Users/Paolo/Desktop/ assignment/Post submission work/Extreme1KY_Outcomes.xlsx") 
+write_xlsx(Extreme1KY_Outcomes, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Extreme1KY_Outcomes.xlsx") 
 
 
 BTC_Net1KY_Data_zoo <- zoo(
@@ -395,7 +490,7 @@ Extreme1KY_Outcomes_V <- Extreme1KY_Outcomes_V %>%
 
 
 
-write_xlsx(Extreme1KY_Outcomes_V, "C:/Users/Paolo/Desktop/ assignment/Post submission work/Extreme1KY_Outcomes_Volume.xlsx") 
+write_xlsx(Extreme1KY_Outcomes_V, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/Extreme1KY_Outcomes_Volume.xlsx") 
 
 
 
@@ -446,7 +541,7 @@ head(DailyData_Issuancebinary)
 nrow(DailyData_NoEventWindow_1KYED)
 nrow(DailyData_Issuancebinary)
 
-write_xlsx(DailyData_NoEventWindow_1KYED, "C:/Users/Paolo/Desktop/ assignment/Post submission work/DailyData_NoEventWindow.xlsx")
+write_xlsx(DailyData_NoEventWindow_1KYED, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/DailyData_NoEventWindow.xlsx")
 
 ## Join to have Event Window data
 DailyData_EventWindow_1KYED <- Event_Window_1KYED %>% left_join(DailyData_Issuancebinary, by = "date")
@@ -511,6 +606,14 @@ plot(IRF_E1KY)
 
 
 
+
+
+
+
+
+
+
+
 # Top 5% of transactions: are they all from 1KY?
 ## Define extreme USDT transactions
 ### 95% to get highest
@@ -531,8 +634,14 @@ head(USDTDataClean)
 # Top 5% table
 USDT_Top5pc <- USDTDataClean %>% filter(extreme  == "High transaction")
 
-write_xlsx(USDT_Top5pc, "C:/Users/Paolo/Desktop/ assignment/Post submission work/USDTClean with high transactions identification.xlsx") 
+write_xlsx(USDT_Top5pc, "C:/Users/Paolo/Desktop/Fideres assignment/Post submission work/USDTClean with high transactions identification.xlsx") 
 # Top 5% are not all from 1KY or 1NT. On 22/02 there is another interesting high Simple Send transaction. Lets look at particular days
+
+
+
+
+
+
 
 
 
